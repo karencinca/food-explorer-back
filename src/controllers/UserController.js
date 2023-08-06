@@ -1,6 +1,6 @@
 const AppError = require('../utils/AppError')
 
-class AdminController {
+class UserController {
     create(request, response) {
         const { name, email, password } = request.body
 
@@ -12,4 +12,4 @@ class AdminController {
     }
 }
 
-module.exports = AdminController
+module.exports = UserController

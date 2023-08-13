@@ -3,7 +3,7 @@ const knex = require('../database/knex')
 class PlatesController {
     async create(request, response) {
         const { title, description, image, price, ingredients } = request.body
-        const { user_id } = request.params
+        const user_id = request.user.id
 
         const [plate_id] = await knex('plates').insert({
             title,
@@ -47,7 +47,8 @@ class PlatesController {
     }
 
     async index(request, response) {
-        const { title, user_id, ingredients } = request.query
+        const { title, ingredients } = request.query
+        const user_id = request.user.id
 
         let plates
 

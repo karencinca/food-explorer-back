@@ -1,15 +1,18 @@
 const knex = require('../database/knex')
+const DiskStorage = require('../providers/DiskStorage')
+const AppError = require('../utils/AppError')
 
 class PlatesController {
     async create(request, response) {
-        const { title, description, image, price, ingredients } = request.body
+        const { title, description, price, image, category, ingredients} = request.body
         const user_id = request.user.id
 
         const [plate_id] = await knex('plates').insert({
-            title,
+            title, 
             description,
-            image,
             price,
+            image,
+            category,
             user_id
         })
 
@@ -24,6 +27,7 @@ class PlatesController {
         await knex('ingredients').insert(ingredientsInsert)
 
         return response.json()
+
     }
 
     async show(request, response) {
@@ -44,6 +48,30 @@ class PlatesController {
         await knex('plates').where({ id }).delete()
 
         return response.json()
+    }
+
+    async update(request, response) {
+        const { plate_id } = request.params
+        const imageFilename = request.file.filename
+
+        const diskStorage = new DiskStorage()
+
+        const plate = await knex('plates').where({ id: plate_id }).first()
+
+        if (!plate) {
+            throw new AppError('Prato não encontrado', 404)
+        }
+
+        if (plate.image) {
+            await diskStorage.deleteFile(plate.image)
+        }
+
+        const filename = await diskStorage.saveFile(imageFilename)
+        plate.image = filename
+
+        await knex('plates').update(plate).where({ id: plate_id})
+
+        return response.json(plate)
     }
 
     async index(request, response) {

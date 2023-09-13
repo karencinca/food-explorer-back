@@ -13,9 +13,9 @@ const platesController = new PlatesController()
 platesRoutes.use(ensureAuthenticated)
 
 platesRoutes.get('/', platesController.index)
-platesRoutes.post('/', platesController.create)
+platesRoutes.post('/', upload.single('image'), platesController.create)
 platesRoutes.get('/:id', platesController.show)
 platesRoutes.delete('/:id', platesController.delete)
-platesRoutes.patch('/:plate_id', upload.single('image'), platesController.update)
+platesRoutes.patch('/:id', upload.single('image'), platesController.update)
 
 module.exports = platesRoutes

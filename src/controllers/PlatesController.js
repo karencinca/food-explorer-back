@@ -4,14 +4,18 @@ const AppError = require('../utils/AppError')
 
 class PlatesController {
     async create(request, response) {
-        const { title, description, price, image, category, ingredients} = request.body
+        const { title, description, price, category, ingredients} = request.body
+        const image = request.file.filename
         const user_id = request.user.id
+
+        const diskStorage = new DiskStorage()
+        const filename = await diskStorage.saveFile(image)
 
         const [plate_id] = await knex('plates').insert({
             title, 
             description,
             price,
-            image,
+            image: filename,
             category,
             user_id
         })
@@ -51,27 +55,49 @@ class PlatesController {
     }
 
     async update(request, response) {
-        const { plate_id } = request.params
-        const imageFilename = request.file.filename
+        const { id } = request.params
+        const { title, description, category, price, ingredients } = request.body
+        const imageFilename = request.file?.filename
 
-        const diskStorage = new DiskStorage()
-
-        const plate = await knex('plates').where({ id: plate_id }).first()
+        const plate = await knex('plates').where({ id }).first()
 
         if (!plate) {
             throw new AppError('Prato não encontrado', 404)
         }
 
-        if (plate.image) {
-            await diskStorage.deleteFile(plate.image)
+        const plateUpdate = {
+            title: title ?? plate.title,
+            description: description ?? plate.description,
+            category: category ?? plate.category,
+            price: price ?? plate.price,
+            updated_at: knex.fn.now()
         }
 
-        const filename = await diskStorage.saveFile(imageFilename)
-        plate.image = filename
+        if (imageFilename) {
+            const diskStorage = new DiskStorage()
 
-        await knex('plates').update(plate).where({ id: plate_id})
+            if (plate.image) {
+                await diskStorage.deleteFile(plate.image)
+            }
 
-        return response.json(plate)
+            const filename = await diskStorage.saveFile(imageFilename)
+            plateUpdate.image = filename
+        }
+
+        if (ingredients) {
+            await knex('ingredients').where({ plate_id: id}).delete()
+
+            const ingredientsInsert = ingredients.map((name) => {
+                return {
+                    plate_id: id,
+                    name,
+                }
+            })
+
+            await knex('ingredients').insert(ingredientsInsert)
+        }
+        await knex('plates').where({ id }).update(plateUpdate)
+        return response.json()
     }
 
     async index(request, response) {
@@ -98,7 +124,7 @@ class PlatesController {
         } else {
             plates = await knex('plates')
             .where({ user_id })
-            .whereLike('title', `%${title}%`)
+            // .whereLike('title', `%${title}%`)
             .orderBy('title')
         }
 

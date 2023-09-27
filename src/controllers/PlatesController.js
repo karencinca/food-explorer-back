@@ -11,6 +11,8 @@ class PlatesController {
         const diskStorage = new DiskStorage()
         const filename = await diskStorage.saveFile(image)
 
+        const ingredientsArray = JSON.parse(ingredients || '[]')
+
         const [plate_id] = await knex('plates').insert({
             title, 
             description,
@@ -20,7 +22,7 @@ class PlatesController {
             user_id
         })
 
-        const ingredientsInsert = ingredients.map(name => {
+        const ingredientsInsert = ingredientsArray.map(name => {
             return {
                 plate_id,
                 name,
@@ -124,7 +126,7 @@ class PlatesController {
         } else {
             plates = await knex('plates')
             .where({ user_id })
-            // .whereLike('title', `%${title}%`)
+            .whereLike('title', `%${title}%`)
             .orderBy('title')
         }
 

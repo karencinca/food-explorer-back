@@ -103,43 +103,60 @@ class PlatesController {
     }
 
     async index(request, response) {
-        const { title, ingredients } = request.query
-        const user_id = request.user.id
-
-        let plates
-
-        if (ingredients) {
-            const filterIngredients = ingredients.split(',').map(ingredient => ingredient.trim())
-            
-            plates = await knex('ingredients')
-            .select([
-                'plates.id',
-                'plates.title',
-                'plates.user_id'
-            ])
-            .where('plates.user_id', user_id)
-            .whereLike('plates.title', `%${title}%`)
-            .whereIn('name', filterIngredients)
-            .innerJoin('plates', 'plates.id', 'ingredients.plate_id')
-            .orderBy('plates.title')
-
-        } else {
-            plates = await knex('plates')
-            .where({ user_id })
-            .whereLike('title', `%${title}%`)
-            .orderBy('title')
-        }
-
-        const userIngredients = await knex('ingredients').where({ user_id })
-        const platesWithIngredients = plates.map(plate => {
-            const plateIngredients = userIngredients.filter(ingredient => ingredient.plate_id === plate.id)
-            return {
-                ...plate,
-                ingredients: plateIngredients
+            const { searchQuery } = request.query
+          
+            let plates;
+          
+            if (searchQuery) {
+              const keywords = searchQuery.split(' ').map(keyword => keyword.trim())
+          
+              plates = await knex('plates')
+                .select([
+                  'plates.id',
+                  'plates.title',
+                  'plates.description',
+                  'plates.category',
+                  'plates.price',
+                  'plates.image',
+                  'plates.user_id'
+                ])
+                .where(builder => {
+                    builder.where(function() {
+                      keywords.forEach(keyword => {
+                        this.orWhere('title', 'like', `%${keyword}%`)
+                        this.orWhere('ingredients.name', 'like', `%${keyword}%`)
+                      })
+                    })
+                })
+                .leftJoin('ingredients', 'plates.id', 'ingredients.plate_id')
+                .groupBy('plates.id')
+            } else {
+              plates = await knex('plates')
+                .select([
+                  'plates.id',
+                  'plates.title',
+                  'plates.description',
+                  'plates.category',
+                  'plates.price',
+                  'plates.image'
+                ])
+                .orderBy('title');
+                
             }
-        })
 
-        return response.json(platesWithIngredients)
+            const platesWithIngredients = await Promise.all(
+                plates.map(async (plate) => {
+                  const plateIngredients = await knex('ingredients')
+                    .where('plate_id', plate.id)
+                    .select(['name']);
+                  return {
+                    ...plate,
+                    ingredients: plateIngredients,
+                  };
+                })
+              );
+
+            return response.json(platesWithIngredients)  
     }
 }
 

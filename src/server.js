@@ -1,4 +1,4 @@
-require('express-async-errors')
+const cookieParser = require('cookie-parser')
 const AppError = require('./utils/AppError')
 const express = require('express')
 const cors = require('cors')
@@ -7,8 +7,12 @@ const uploadConfig = require('./configs/upload')
 const routes = require('./routes')
 
 const app = express()
-app.use(cors())
 app.use(express.json())
+app.use(cookieParser())
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173/'],
+    credentials: true
+}))
 
 app.use('/files', express.static(uploadConfig.UPLOADS_FOLDER))
 

@@ -71,5 +71,3 @@ $ npm start
 ```
 
 ⚠️ **Importante**: Este projeto utiliza uma hospedagem gratuita para o back-end, sendo assim, pode haver atrasos no tempo de resposta do servidor.
-
-<h2>👩‍💻👨‍💻 Personas</h2>

@@ -4,7 +4,7 @@ const knex = require('../database/knex')
 
 class UserController {
     async create(request, response) {
-        const { name, email, password } = request.body
+        const { name, email, password, role } = request.body
 
         const checkUserExists = await knex('users').where({ email }).first()
 
@@ -18,13 +18,14 @@ class UserController {
             name,
             email,
             password: hashedPassword,
+            role
         })
 
         return response.status(201).json()
     }
 
     async update(request, response) {
-        const { name, email, password, old_password } = request.body
+        const { name, email, password, old_password, role } = request.body
         const user_id = request.user.id
 
         const user = await knex('users').where({ id: user_id }).first()
@@ -41,6 +42,7 @@ class UserController {
 
         user.name = name ?? user.name
         user.email = email ?? user.email
+        user.role = role ?? user.role
 
         if (password && !old_password) {
             throw new AppError('Informar a senha antiga')
@@ -60,6 +62,7 @@ class UserController {
             name: user.name,
             email: user.email,
             password: user.password,
+            role: user.role,
             updated_at: knex.fn.now()
         })
             return response.status(200).json()

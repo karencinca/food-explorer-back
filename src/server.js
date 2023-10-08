@@ -11,7 +11,8 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://main--strong-marzipan-55dfeb.netlify.app/'],
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://main--strong-marzipan-55dfeb.netlify.app'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 }))
 

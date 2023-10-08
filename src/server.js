@@ -11,7 +11,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin: ['https://food-explorer-back-6pvd.onrender.com'],
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://main--strong-marzipan-55dfeb.netlify.app/'],
     credentials: true
 }))
 

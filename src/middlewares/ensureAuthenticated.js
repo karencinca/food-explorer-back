@@ -10,7 +10,8 @@ function ensureAuthenticated(request, response, next) {
     }
 
     const [, token] = authHeader.cookie.split('token=')
-
+    console.log(authHeader.cookie.split('token='))
+    
     try {
         const { role, sub: user_id } = verify(token, authConfig.jwt.secret)
         request.user = {

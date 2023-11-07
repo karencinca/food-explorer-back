@@ -1,18 +1,18 @@
-<h1>
+<h1 align='center'>
   Food Explorer
 </h1>
 
-<h2>📁Projeto</h2>
+## 📁Projeto
 O projeto Food Explorer consiste no desafio final do programa Explorer da Rocketseat. O projeto simula um cardápio digital de um restaurante e nele foi colocado em prática o que foi estudado ao longo do curso.
 
-<h2>🧱 Estrutura</h2>
+## 🧱 Estrutura
 A aplicação contém as seguintes tabelas:
 
 - Usuários
 - Pratos
 - Ingredientes dos pratos
 
-<h2>🔧 Funcionalidades</h2>
+## 🔧 Funcionalidades
 Este projeto possui as seguintes funcionalidades:
 
 - Login
@@ -25,7 +25,7 @@ Este projeto possui as seguintes funcionalidades:
 - Excluir prato
 - Logout
 
-<h2>💻 Tecnologias</h2>
+## 💻 Tecnologias
 A aplicação foi construída utilizando as seguintes tecnologias:
 
 - Node.js
@@ -36,7 +36,7 @@ A aplicação foi construída utilizando as seguintes tecnologias:
 - CORS
 - SQLite
 
-<h2>⚙ Utilização</h2>
+## ⚙ Utilização
 
 Certifique-se de ter o ``Node.js`` e o ``npm`` instalados antes de prosseguir com as etapas abaixo:
 
@@ -71,3 +71,5 @@ $ npm start
 ```
 
 ⚠️ **Importante**: Este projeto utiliza uma hospedagem gratuita para o back-end, sendo assim, pode haver atrasos no tempo de resposta do servidor.
+
+Feito com 💜 por [Karen Cinca](https://www.linkedin.com/in/karencinca/)

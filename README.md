@@ -2,6 +2,7 @@
   Food Explorer
 </h1>
 
+
 ## 📁Projeto
 O projeto Food Explorer consiste no desafio final do programa Explorer da Rocketseat. O projeto simula um cardápio digital de um restaurante e nele foi colocado em prática o que foi estudado ao longo do curso.
 
@@ -71,5 +72,11 @@ $ npm start
 ```
 
 ⚠️ **Importante**: Este projeto utiliza uma hospedagem gratuita para o back-end, sendo assim, pode haver atrasos no tempo de resposta do servidor.
+
+## 📌 Repositórios
+
+### [Frontend](https://github.com/karencinca/food-explorer-front)
+### [Backend](https://github.com/karencinca/food-explorer-front)
+#
 
 Feito com 💜 por [Karen Cinca](https://www.linkedin.com/in/karencinca/)
